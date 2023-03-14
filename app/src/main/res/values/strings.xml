@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PE_PRM</string>
+    <string name="textview">TextView</string>
+    <color name="grey">#808080</color>
+</resources>

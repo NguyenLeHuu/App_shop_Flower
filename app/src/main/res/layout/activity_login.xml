@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".activities.LoginActivity"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:gravity="center"
+        android:text="LOGIN"
+        android:textSize="20dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="246dp"
+        app:srcCompat="@drawable/shoes" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:text="Username"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/edtUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input Your UserName"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:text="Password"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/edtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:onClick="clickToLogin"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch to Register"
+        android:onClick="clickToSwitchToSignup"/>
+</LinearLayout>
