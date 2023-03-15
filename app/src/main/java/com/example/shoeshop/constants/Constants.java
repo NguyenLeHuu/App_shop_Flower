@@ -1,7 +1,6 @@
 package com.example.shoeshop.constants;
 
 public final class Constants {
-    public static final String BE_URL ="http://10.3.72.226:8080/api";
 
     public static final String SHARED_PREFERENCE_NAME = "com.example.shoeshop";
 
