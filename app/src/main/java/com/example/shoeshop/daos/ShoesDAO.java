@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.shoeshop.db.MyDatabase;
-import com.example.shoeshop.DTO.ShoesDTO;
+import com.example.shoeshop.model.ShoesDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;

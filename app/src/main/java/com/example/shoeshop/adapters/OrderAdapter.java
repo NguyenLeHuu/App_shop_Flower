@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.shoeshop.R;
-import com.example.shoeshop.DTO.OrderDTO;
+import com.example.shoeshop.model.OrderDTO;
 
 import java.util.ArrayList;
 

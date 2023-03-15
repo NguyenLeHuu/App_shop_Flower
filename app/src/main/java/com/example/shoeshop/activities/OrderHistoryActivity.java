@@ -10,7 +10,7 @@ import com.example.shoeshop.R;
 import com.example.shoeshop.adapters.OrderAdapter;
 import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.daos.OrderDAO;
-import com.example.shoeshop.DTO.OrderDTO;
+import com.example.shoeshop.model.OrderDTO;
 
 import java.util.ArrayList;
 

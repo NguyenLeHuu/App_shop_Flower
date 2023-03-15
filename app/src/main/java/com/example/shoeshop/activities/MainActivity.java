@@ -18,7 +18,7 @@ import com.example.shoeshop.adapters.ShoeAdapter;
 import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.daos.CartDAO;
 import com.example.shoeshop.daos.ShoesDAO;
-import com.example.shoeshop.DTO.ShoesDTO;
+import com.example.shoeshop.model.ShoesDTO;
 
 import java.util.ArrayList;
 

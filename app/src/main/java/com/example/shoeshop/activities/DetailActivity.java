@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.shoeshop.DTO.CartItemDTO;
-import com.example.shoeshop.DTO.ShoesDTO;
+import com.example.shoeshop.model.CartItemDTO;
+import com.example.shoeshop.model.ShoesDTO;
 import com.example.shoeshop.R;
 import com.example.shoeshop.daos.CartDAO;
 import com.squareup.picasso.Picasso;

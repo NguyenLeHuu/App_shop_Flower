@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.shoeshop.db.MyDatabase;
-import com.example.shoeshop.DTO.CartItemDTO;
-import com.example.shoeshop.DTO.OrderDTO;
+import com.example.shoeshop.model.CartItemDTO;
+import com.example.shoeshop.model.OrderDTO;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

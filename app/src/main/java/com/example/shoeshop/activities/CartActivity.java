@@ -14,8 +14,8 @@ import com.example.shoeshop.adapters.CartAdapter;
 import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.daos.CartDAO;
 import com.example.shoeshop.daos.OrderDAO;
-import com.example.shoeshop.DTO.CartItemDTO;
-import com.example.shoeshop.DTO.OrderDTO;
+import com.example.shoeshop.model.CartItemDTO;
+import com.example.shoeshop.model.OrderDTO;
 
 import java.util.ArrayList;
 import java.util.Date;

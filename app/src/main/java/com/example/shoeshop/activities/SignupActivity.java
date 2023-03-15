@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.shoeshop.R;
 import com.example.shoeshop.daos.UserDAO;
-import com.example.shoeshop.DTO.UserDTO;
+import com.example.shoeshop.model.UserDTO;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText edtUsername, edtPassword, edtConfirmPassword, edtEmail;

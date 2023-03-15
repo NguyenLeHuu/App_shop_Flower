@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.shoeshop.R;
 import com.example.shoeshop.daos.CartDAO;
-import com.example.shoeshop.DTO.CartItemDTO;
+import com.example.shoeshop.model.CartItemDTO;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

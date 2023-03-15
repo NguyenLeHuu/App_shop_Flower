@@ -12,8 +12,8 @@ import android.content.Intent;
 import com.example.shoeshop.R;
 import com.example.shoeshop.activities.DetailActivity;
 import com.example.shoeshop.daos.CartDAO;
-import com.example.shoeshop.DTO.CartItemDTO;
-import com.example.shoeshop.DTO.ShoesDTO;
+import com.example.shoeshop.model.CartItemDTO;
+import com.example.shoeshop.model.ShoesDTO;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
