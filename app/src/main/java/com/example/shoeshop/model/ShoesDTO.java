@@ -10,6 +10,8 @@ public class ShoesDTO implements Serializable {
     private int quantity;
     private String image;
 
+    public ShoesDTO() {}
+
     public ShoesDTO(int id, String name, String description, double price, int quantity, String image) {
         this.id = id;
         this.name = name;

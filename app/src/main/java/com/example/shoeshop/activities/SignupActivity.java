@@ -9,8 +9,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shoeshop.R;
-import com.example.shoeshop.daos.UserDAO;
+import com.example.shoeshop.model.ResponseModel;
+import com.example.shoeshop.model.User;
 import com.example.shoeshop.model.UserDTO;
+import com.example.shoeshop.service.ApiService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText edtUsername, edtPassword, edtConfirmPassword, edtEmail;
@@ -29,22 +35,30 @@ public class SignupActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
         String email = edtEmail.getText().toString();
-        String role = "User";
 
-        UserDTO dto = new UserDTO(username, password, email, role);
-        UserDAO dao = new UserDAO(this);
-        try {
-            boolean success = dao.register(dto);
-            if (success) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "Cannot create user.", Toast.LENGTH_SHORT).show();
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setFullname(email);
+        ApiService.apiService.signUp(user).enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                if (response.code()==200){
+                    Toast.makeText(SignupActivity.this, "Create user successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Toast.makeText(SignupActivity.this, "Cannot create user.", Toast.LENGTH_SHORT).show();
+                }
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "Error Occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                Toast.makeText(SignupActivity.this, "Error Occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void clickToSwitchToLogin(View view) {

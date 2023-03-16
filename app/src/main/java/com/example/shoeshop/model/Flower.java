@@ -3,18 +3,22 @@ package com.example.shoeshop.model;
 
 //import com.example.androidflower.R;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Flower {
 
     private int id;
-    private int image;
+    private String image;
     private String name;
     private double price;
     private int status;
     private int quantity;
     private String description;
+
+    public Flower() {}
 
     public int getStatus() {
         return status;
@@ -40,13 +44,13 @@ public class Flower {
         this.description = description;
     }
 
-    public Flower(int image, String name) {
+    public Flower(String image, String name) {
         this.image = image;
         this.name = name;
         this.price = 0;
     }
 
-    public Flower(int id , int image, String name, double price) {
+    public Flower(int id , String image, String name, double price) {
         this.id = id;
         this.image = image;
         this.name = name;
@@ -69,7 +73,7 @@ public class Flower {
         this.price = price;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -77,7 +81,7 @@ public class Flower {
         return name;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -85,26 +89,63 @@ public class Flower {
         this.name = name;
     }
 
-//    public static List<Flower> getListFlower(){
-//        List<Flower> list = new ArrayList<>();
-//        list.add(new Flower(R.drawable.hoacamtu,"Hoa cẩm tú"));
-//        list.add(new Flower(R.drawable.hoahong,"Hoa hồng"));
-//        list.add(new Flower(R.drawable.hoasen,"Hoa sen"));
-//        list.add(new Flower(R.drawable.hoatra,"Hoa trà"));
-//        list.add(new Flower(R.drawable.hoahuongduong,"Hoa huóng dương"));
-//
-//        list.add(new Flower(R.drawable.hoacamtu,"Hoa cẩm tú"));
-//        list.add(new Flower(R.drawable.hoahong,"Hoa hồng"));
-//        list.add(new Flower(R.drawable.hoasen,"Hoa sen"));
-//        list.add(new Flower(R.drawable.hoatra,"Hoa trà"));
-//        list.add(new Flower(R.drawable.hoahuongduong,"Hoa huóng dương"));
-//
-//        list.add(new Flower(R.drawable.hoacamtu,"Hoa cẩm tú"));
-//        list.add(new Flower(R.drawable.hoahong,"Hoa hồng"));
-//        list.add(new Flower(R.drawable.hoasen,"Hoa sen"));
-//        list.add(new Flower(R.drawable.hoatra,"Hoa trà"));
-//        list.add(new Flower(R.drawable.hoahuongduong,"Hoa huóng dương"));
-//
-//        return list;
-//    }
+    
+    public static ArrayList<CartItemDTO> convertListFlowerToCartItem(ArrayList<Flower> flowers){
+        ArrayList<CartItemDTO> lists = new ArrayList<>();
+        for (Flower flower: flowers) {
+            lists.add(convertFlowerToCartItem(flower));
+        }
+        return lists;
+    }
+
+    public static CartItemDTO convertFlowerToCartItem(Flower flower){
+        CartItemDTO dto = new CartItemDTO();
+        dto.setId(flower.getId());
+        dto.setName(flower.getName());
+        dto.setQuantity(flower.getQuantity());
+        dto.setPrice(flower.getPrice());
+        dto.setImage(flower.getImage());
+        return dto;
+    }
+
+    public static  ShoesDTO convertFlowerToShoesDto(Flower flower){
+        ShoesDTO dto = new ShoesDTO();
+        dto.setId(flower.getId());
+        dto.setImage(flower.getImage());
+        dto.setName(flower.getName());
+        dto.setPrice(flower.getPrice());
+        dto.setQuantity(flower.getQuantity());
+        dto.setDescription(flower.getDescription());
+        return dto;
+    }
+
+    public static ArrayList<ShoesDTO> convertListFlowerToShoesItem(ArrayList<Flower> flowers){
+        ArrayList<ShoesDTO> lists = new ArrayList<>();
+        for (Flower flower: flowers) {
+            lists.add(convertFlowerToShoesDto(flower));
+        }
+        return lists;
+    }
+
+    public static Flower convertObjetToFlower (Object object){
+        LinkedTreeMap<String, Object> objs = (LinkedTreeMap<String, Object>) object;
+        Flower flower = new Flower();
+        flower.setId(((Double)objs.get("id")).intValue());
+        flower.setPrice(Double.parseDouble((String)objs.get("price")));
+        flower.setDescription((String)objs.get("description"));
+        flower.setQuantity(((Double)objs.get("quantity")).intValue());
+        flower.setImage((String)objs.get("image"));
+        flower.setName((String)objs.get("name"));
+
+        return flower;
+    }
+
+    public static ArrayList<Flower> convertObjectToList (Object object){
+        ArrayList<Flower> flowers = new ArrayList<>();
+        ArrayList<Object> list = (ArrayList<Object>)object;
+        for (Object data : list) {
+            flowers.add(convertObjetToFlower(data));
+        }
+        return  flowers;
+    }
 }

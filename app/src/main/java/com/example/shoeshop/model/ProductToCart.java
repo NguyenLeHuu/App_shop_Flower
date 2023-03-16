@@ -1,27 +1,42 @@
 package com.example.shoeshop.model;
 
-public class ProductToCart {
-    private String productId;
-    private String quantity;
+import java.util.ArrayList;
+import java.util.List;
 
-    public ProductToCart(String productId, String quantity) {
+public class ProductToCart {
+    private int productId;
+    private int quantity;
+
+    public ProductToCart(int productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
 
-    public String getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public static List<ProductToCart> convertListCartItemDTOToThis(ArrayList<CartItemDTO> lists){
+        List<ProductToCart> products = new ArrayList<>();
+        for ( CartItemDTO tmp: lists) {
+            products.add(convertCartItemDtoToThis(tmp));
+        }
+        return  products;
+    }
+
+    public static ProductToCart convertCartItemDtoToThis (CartItemDTO dto){
+        return  new ProductToCart(dto.getId(), dto.getQuantity());
     }
 }

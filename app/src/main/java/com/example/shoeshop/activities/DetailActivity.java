@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shoeshop.model.CartItemDTO;
+import com.example.shoeshop.model.ProductToCart;
+import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.model.ShoesDTO;
 import com.example.shoeshop.R;
-import com.example.shoeshop.daos.CartDAO;
+import com.example.shoeshop.model.User;
+import com.example.shoeshop.service.ApiService;
+import com.example.shoeshop.service.SharedPreferencesManager;
 import com.squareup.picasso.Picasso;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
     private TextView txtName , txtPrice, txtDesc;
@@ -54,27 +63,65 @@ public class DetailActivity extends AppCompatActivity {
         txtPrice.setText(dto.getPrice() + "");
         txtDesc.setText(dto.getDescription());
         Picasso.get().load(dto.getImage()).into(imgFruitView);
+
+
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CartDAO dao = new CartDAO(v.getContext());
-                try {
-                    CartItemDTO cartItem = dao.getCartItem(dto.getId());
-                    if (cartItem == null) {
-                        cartItem = new CartItemDTO(dto.getId(), dto.getName(), 1, dto.getPrice(), dto.getImage());
-                        dao.addToCart(cartItem);
-                    } else {
-                        int quantity = cartItem.getQuantity() + 1;
-                        dao.updateCart(dto.getId(), quantity);
+
+                SharedPreferencesManager spm = new SharedPreferencesManager(v.getContext());
+                User user = spm.getUser(v.getContext());
+                ApiService.apiService.addProductToCart(new ProductToCart(dto.getId(),1),user.getId()).enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        Log.e("Hello",response.toString());
+                        Toast.makeText(DetailActivity.this, "Added to Cart Successful", Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(v.getContext(), "Added to Cart", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        Log.e("Hello","Failed");
+                        Toast.makeText(DetailActivity.this, "Added to Cart Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+//
+//                CartDAO dao = new CartDAO(v.getContext());
+//                try {
+//                    CartItemDTO cartItem = dao.getCartItem(dto.getId());
+//                    if (cartItem == null) {
+//                        cartItem = new CartItemDTO(dto.getId(), dto.getName(), 1, dto.getPrice(), dto.getImage());
+//                        dao.addToCart(cartItem);
+//                    } else {
+//                        int quantity = cartItem.getQuantity() + 1;
+//                        dao.updateCart(dto.getId(), quantity);
+//                    }
+//                    Toast.makeText(v.getContext(), "Added to Cart", Toast.LENGTH_LONG).show();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
             }
         });
 
 
+    }
+
+
+    public void clickAddProductToCart(View v){
+        SharedPreferencesManager spm = new SharedPreferencesManager(v.getContext());
+        User user = spm.getUser(v.getContext());
+        ShoesDTO dto  = (ShoesDTO) getIntent().getSerializableExtra("DTO");
+        ApiService.apiService.addProductToCart(new ProductToCart(dto.getId(),1),user.getId()).enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                Toast.makeText(v.getContext(), "Added to Cart Successful", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                Toast.makeText(v.getContext(), "Added to Cart Failed", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shoeshop.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,21 @@ import android.widget.Toast;
 import android.content.Intent;
 import com.example.shoeshop.R;
 import com.example.shoeshop.activities.DetailActivity;
-import com.example.shoeshop.daos.CartDAO;
 import com.example.shoeshop.model.CartItemDTO;
+import com.example.shoeshop.model.Flower;
+import com.example.shoeshop.model.ProductToCart;
+import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.model.ShoesDTO;
+import com.example.shoeshop.model.User;
+import com.example.shoeshop.service.ApiService;
+import com.example.shoeshop.service.SharedPreferencesManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ShoeAdapter extends BaseAdapter {
     private ArrayList<ShoesDTO> shoesDTOList;
@@ -57,6 +67,7 @@ public class ShoeAdapter extends BaseAdapter {
         txtPrice.setText(dto.getPrice() + "$");
         try {
             Picasso.get().load(dto.getImage()).fit().into(imgView);
+//            Picasso.get().load("https://i.stack.imgur.com/7fzcV.png").fit().into(imgView);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,20 +75,36 @@ public class ShoeAdapter extends BaseAdapter {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CartDAO dao = new CartDAO(v.getContext());
-                try {
-                    CartItemDTO cartItem = dao.getCartItem(dto.getId());
-                    if (cartItem == null) {
-                        cartItem = new CartItemDTO(dto.getId(), dto.getName(), 1, dto.getPrice(), dto.getImage());
-                        dao.addToCart(cartItem);
-                    } else {
-                        int quantity = cartItem.getQuantity() + 1;
-                        dao.updateCart(dto.getId(), quantity);
+
+                SharedPreferencesManager spm = new SharedPreferencesManager(v.getContext());
+                User user = spm.getUser(v.getContext());
+                ApiService.apiService.addProductToCart(new ProductToCart(dto.getId(),1),user.getId()).enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        Log.e("Hello",response.toString());
+                        Toast.makeText(v.getContext(), "Added to Cart Successful", Toast.LENGTH_LONG).show();
                     }
-                    Toast.makeText(v.getContext(), "Added to Cart", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        Toast.makeText(v.getContext(), "Added to Cart Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+//                CartDAO dao = new CartDAO(v.getContext());
+//                try {
+//                    CartItemDTO cartItem = dao.getCartItem(dto.getId());
+//                    if (cartItem == null) {
+//                        cartItem = new CartItemDTO(dto.getId(), dto.getName(), 1, dto.getPrice(), dto.getImage());
+//                        dao.addToCart(cartItem);
+//                    } else {
+//                        int quantity = cartItem.getQuantity() + 1;
+//                        dao.updateCart(dto.getId(), quantity);
+//                    }
+//                    Toast.makeText(v.getContext(), "Added to Cart", Toast.LENGTH_LONG).show();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
             }
         });

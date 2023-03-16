@@ -4,10 +4,13 @@ import com.example.shoeshop.model.Account;
 import com.example.shoeshop.model.Category;
 import com.example.shoeshop.model.Flower;
 import com.example.shoeshop.model.Invoice;
+import com.example.shoeshop.model.InvoiceRequest;
 import com.example.shoeshop.model.ProductToCart;
 import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.model.User;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
@@ -18,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -27,9 +31,13 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
+    Gson gson = new GsonBuilder()
+
+            .create();
+
     ApiService apiService = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/api/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);
 
@@ -40,13 +48,17 @@ public interface ApiService {
                                      @Query("limit") int limit
     );
 
-    @POST("cart")
-    Call<ResponseModel> addProductToCart(@Body ProductToCart productToCart);
+    @POST("cart/")
+    Call<ResponseModel> addProductToCart(@Body ProductToCart productToCart, @Query("userId") int userId);
 
     @DELETE("cart/{productId}")
     Call<ResponseModel> removeProductToCart(@Path("productId") int productId,
                                             @Query("userId") int userId
                                             );
+    @GET("cart/{productId}")
+    Call<ResponseModel> getProductInCart(@Path("productId") int productId,
+                                            @Query("userId") int userId
+    );
 
     // Category
     @GET("categories/")
@@ -82,13 +94,13 @@ public interface ApiService {
 
     // Invoice
     @GET("invoices/")
-    Call<ResponseModel> listInvoice(@Query("page") int page,
-                              @Query("limit")int limit,
+    Call<ResponseModel> listInvoice(@Query("page") int page ,
+                              @Query("limit")int limit ,
                               @Query("userId") int userId
                             );
 
     @POST("invoices/")
-    Call<ResponseModel> createInvoice(@Body Invoice invoice);
+    Call<ResponseModel> createInvoice(@Body InvoiceRequest invoiceRequest, @Query("userId") int userId);
 
     @GET("invoices/{id}")
     Call<ResponseModel> viewInvoiceDetail(@Path("id") int id);
@@ -102,23 +114,26 @@ public interface ApiService {
                               @Query("categoryId") int categoryId
                             );
 
+    @GET("products/")
+    Call<ResponseModel> listProduct( @Query("limit")int limit);
+
     @GET("products/{id}")
     Call<ResponseModel> viewProductDetail(@Path("id") int id);
 
     @Multipart
     @POST("products/")
-    Call<ResponseModel> create(@Part("product") Flower flower,
+    Call<ResponseModel> createProduct(@Part("product") Flower flower,
                                @Part MultipartBody.Part[] images);
 
     @PUT("products/")
-    Call<ResponseModel> updated(@Body Flower flower);
+    Call<ResponseModel> updateProduct(@Body Flower flower);
 
     @DELETE("products/{id}")
-    Call<ResponseModel> delete(@Path("id") int id);
+    Call<ResponseModel> deleteProduct(@Path("id") int id);
 
     //User
     @GET("users/")
-    Call<ResponseModel> listUser(@Query("page") int page,
+    Call<ResponseModel> listUser(@Query("page") int page ,
                               @Query("limit")int limit,
                               @Query("fullname") String fullname,
                               @Query("id") int id
@@ -126,12 +141,19 @@ public interface ApiService {
 
     @Multipart
     @POST("users/signup")
-    Call<ResponseModel> signUp(@Part("product")User user,
+    Call<ResponseModel> signUp(@Part("user")User user,
                                @Part MultipartBody.Part image);
+
+
+    @POST("users/signup")
+    Call<ResponseModel> signUp(@Body User user);
 
     @POST("users/login")
     Call<ResponseModel> login(@Body Account account);
 
     @PUT("users/")
     Call<ResponseModel> updateUser(@Body User user);
+
+    @GET("users/getUserByAccessToken")
+    Call<ResponseModel> getUserByAccessToken (@Header("Authorization") String authHeader);
 }

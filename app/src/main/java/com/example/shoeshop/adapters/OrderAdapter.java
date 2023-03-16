@@ -1,5 +1,6 @@
 package com.example.shoeshop.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class OrderAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.order, parent, false);
         };
-
+        Log.e("History",position + "");
         OrderDTO order =  (OrderDTO) getItem(position);
         TextView txtOrderId = convertView.findViewById(R.id.txtOrderId);
         txtOrderId.setText("Order #" + order.getId() + " - " + order.getTime().toString());

@@ -25,6 +25,9 @@ public class CartItemDTO implements Serializable {
         this.image = image;
     }
 
+    public CartItemDTO() {
+    }
+
     public int getId() {
         return id;
     }

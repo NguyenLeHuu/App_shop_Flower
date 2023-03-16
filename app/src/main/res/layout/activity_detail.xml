@@ -51,7 +51,8 @@
                     android:gravity="center_vertical"
                     android:text="Price"
                     android:textAlignment="center"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    tools:ignore="RtlCompat" />
 
                 <Space
                     android:layout_width="5dp"

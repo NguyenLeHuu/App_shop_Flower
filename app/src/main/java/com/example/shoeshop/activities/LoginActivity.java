@@ -12,11 +12,14 @@ import android.widget.Toast;
 
 import com.example.shoeshop.R;
 import com.example.shoeshop.constants.Constants;
-import com.example.shoeshop.daos.UserDAO;
 import com.example.shoeshop.model.Account;
 import com.example.shoeshop.model.ResponseModel;
+import com.example.shoeshop.model.ShoesDTO;
+import com.example.shoeshop.model.User;
 import com.example.shoeshop.model.UserDTO;
 import com.example.shoeshop.service.ApiService;
+import com.example.shoeshop.service.SharedPreferencesManager;
+import com.google.gson.internal.LinkedTreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,12 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
 
-//        UserDAO dao = new UserDAO(this);
-//        UserDTO dto = dao.login(username, password);
-//        if (dto == null) {
-//            Toast.makeText(this, "Invalid username or password.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        SharedPreferencesManager spm = new SharedPreferencesManager(LoginActivity.this);
+
         ApiService.apiService.login(new Account(username,password)).enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
@@ -54,16 +53,43 @@ public class LoginActivity extends AppCompatActivity {
                         break;
                     case 200:
                         Toast.makeText(LoginActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+                        ResponseModel responseModel = response.body();
+                        String accessToken = (String)responseModel.getData();
+                        spm.saveAccessToken(accessToken);
                         break;
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
                 Log.e("Bye","Failure");
             }
         });
+
+        String accessTk = spm.getAccessToken();
+        if (accessTk !=""){
+            ApiService.apiService.getUserByAccessToken("Bearer " + accessTk).enqueue(new Callback<ResponseModel>() {
+                @Override
+                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                    if (response.code()== 200)
+                    {
+                    ResponseModel responseModel = response.body();
+
+                    User user = User.convertObjectToUser(responseModel.getData());
+                    spm.saveUser(user);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseModel> call, Throwable t) {
+                    Toast.makeText(LoginActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
 //        Intent intent = new Intent(this, MainActivity.class);
 ////        intent.putExtra("DTO", dto);
@@ -79,13 +105,13 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void saveToPreference(UserDTO dto) {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString("IDPref", dto.getUsername());
-        editor.putString("EmailPref", dto.getEmail());
-        editor.putString("Role", dto.getRole());
-        editor.commit();
-    }
+//    private void saveToPreference(UserDTO dto) {
+//        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        editor.putString("IDPref", dto.getUsername());
+//        editor.putString("EmailPref", dto.getEmail());
+//        editor.putString("Role", dto.getRole());
+//        editor.commit();
+//    }
 }
