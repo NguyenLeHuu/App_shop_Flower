@@ -156,4 +156,7 @@ public interface ApiService {
 
     @GET("users/getUserByAccessToken")
     Call<ResponseModel> getUserByAccessToken (@Header("Authorization") String authHeader);
+
+    @POST("pay/")
+    Call<ResponseModel> checkout(@Body Map<String, Object> requestBody);
 }
