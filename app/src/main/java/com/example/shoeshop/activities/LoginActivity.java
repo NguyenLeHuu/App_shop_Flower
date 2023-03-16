@@ -38,38 +38,39 @@ public class LoginActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
 
-//        UserDAO dao = new UserDAO(this);
-//        UserDTO dto = dao.login(username, password);
-//        if (dto == null) {
-//            Toast.makeText(this, "Invalid username or password.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        ApiService.apiService.login(new Account(username,password)).enqueue(new Callback<ResponseModel>() {
-            @Override
-            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                Log.e("Hello",response.toString());
-                switch (response.code()){
-                    case 400:
-                        Toast.makeText(LoginActivity.this,"Failed",Toast.LENGTH_SHORT).show();
-                        break;
-                    case 200:
-                        Toast.makeText(LoginActivity.this,"Successful",Toast.LENGTH_SHORT).show();
-                        break;
-                }
+        UserDAO dao = new UserDAO(this);
+        UserDTO dto = dao.login(username, password);
+        if (dto == null) {
+            Toast.makeText(this, "Invalid username or password.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            }
+//        ApiService.apiService.login(new Account(username,password)).enqueue(new Callback<ResponseModel>() {
+//            @Override
+//            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+//                Log.e("Hello",response.toString());
+//                switch (response.code()){
+//                    case 400:
+//                        Toast.makeText(LoginActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case 200:
+//                        Toast.makeText(LoginActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseModel> call, Throwable t) {
+//                Log.e("Bye","Failure");
+//            }
+//        });
 
-            @Override
-            public void onFailure(Call<ResponseModel> call, Throwable t) {
-                Log.e("Bye","Failure");
-            }
-        });
-
-//        Intent intent = new Intent(this, MainActivity.class);
-////        intent.putExtra("DTO", dto);
-////        saveToPreference(dto);
-//        startActivity(intent);
-//        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra("DTO", dto);
+//        saveToPreference(dto);
+        startActivity(intent);
+        finish();
 
     }
 

@@ -1,5 +1,7 @@
 package com.example.shoeshop.service;
 
+import android.util.Log;
+
 import com.example.shoeshop.model.Account;
 import com.example.shoeshop.model.Category;
 import com.example.shoeshop.model.Flower;
@@ -8,10 +10,14 @@ import com.example.shoeshop.model.ProductToCart;
 import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.model.User;
+import com.google.gson.Gson;
 
 import java.util.Map;
 
+import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -27,11 +33,21 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
+
+    HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+
+    OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build();
+
     ApiService apiService = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/api/")
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
             .create(ApiService.class);
+
+
 
     // Cart
     @GET("cart/")
@@ -134,4 +150,8 @@ public interface ApiService {
 
     @PUT("users/")
     Call<ResponseModel> updateUser(@Body User user);
+
+    //payment paypal
+    @POST("pay")
+    Call<ResponseModel> checkout(@Body String userID, Gson data);
 }

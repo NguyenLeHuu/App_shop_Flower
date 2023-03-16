@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.shoeshop.MapsActivity;
 import com.example.shoeshop.R;
 import com.example.shoeshop.adapters.ShoeAdapter;
 import com.example.shoeshop.constants.Constants;
@@ -47,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuHistory:
                 intent = new Intent(this, OrderHistoryActivity.class);
                 startActivity(intent);
+            case R.id.menuMap:
+                intent = new Intent(this, MapsActivity.class);
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -2,23 +2,24 @@ package com.example.shoeshop.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.shoeshop.R;
 import com.example.shoeshop.adapters.CartAdapter;
-import com.example.shoeshop.constants.Constants;
-import com.example.shoeshop.daos.CartDAO;
-import com.example.shoeshop.daos.OrderDAO;
-import com.example.shoeshop.model.CartItemDTO;
-import com.example.shoeshop.model.OrderDTO;
+import com.example.shoeshop.model.ResponseModel;
+import com.example.shoeshop.service.ApiService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
-import java.util.Date;
+import retrofit2.Callback;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -34,46 +35,105 @@ public class CartActivity extends AppCompatActivity {
 
         listCartView = findViewById(R.id.listCartView);
         CartAdapter adapter = new CartAdapter();
-        CartDAO dao = new CartDAO(this);
-        try {
-            ArrayList<CartItemDTO> cartItems = dao.getCartItems();
-            adapter.setCartDTOList(cartItems);
-            listCartView.setAdapter(adapter);
+//        CartDAO dao = new CartDAO(this);
+//        try {
+//            ArrayList<CartItemDTO> cartItems = dao.getCartItems();
+//            adapter.setCartDTOList(cartItems);
+//            listCartView.setAdapter(adapter);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //api
+        ApiService.apiService.listProductsInCart(8,1,20).enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                Log.e("Hello",response.body().toString());
+                switch (response.code()){
+                    case 400:
+                        Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 200:
+                        Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+                        String respone = response.body().toString();
+                        JsonObject obj_respone = JsonParser.parseString(respone).getAsJsonObject();
+                        JsonArray products = obj_respone.get("data").getAsJsonArray();
+                        JsonObject data = new JsonObject();
+                        data.add("products",products);
+                        data.addProperty("phone","0354187011");
+                        data.addProperty("description","mua hàng giá rẻ");
+                        Log.e("send_data", data.toString());
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel> call, Throwable t) {
+                Log.e("Failure","Failure");
+            }
+        });
 
 
     }
 
     public void clickToCheckout(View view) {
         try {
-            CartAdapter adapter = (CartAdapter) listCartView.getAdapter();
-            ArrayList<CartItemDTO> list = adapter.getCartDTOList();
-            OrderDAO dao = new OrderDAO(this);
 
-            SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
-            String userId = sharedPreferences.getString("IDPref", null);
-            OrderDTO dto = new OrderDTO(new Date(), userId);
-            long orderId = dao.create(dto);
-            if (orderId < 0) {
-                Toast.makeText(this, "Failed to create order!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            boolean success = dao.addOrderDetail(orderId, list);
-            if (success) {
-                CartDAO cartDAO = new CartDAO(this);
-                cartDAO.clearCart();
+//            ApiService.apiService.checkout("8",).enqueue(new Callback<ResponseModel>() {
+//                @Override
+//                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+//                    Log.e("Hello",response.body().toString());
+//                    switch (response.code()){
+//                        case 400:
+//                            Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+//                            break;
+//                        case 200:
+//                            Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+//                            break;
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseModel> call, Throwable t) {
+//                    Log.e("Failure","Failure");
+//                }
+//            });
 
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
-            }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("CHECKOUT","fail_checkout");
         }
     }
+
+//    public void clickToCheckout(View view) {
+//        try {
+//            CartAdapter adapter = (CartAdapter) listCartView.getAdapter();
+//            ArrayList<CartItemDTO> list = adapter.getCartDTOList();
+//            OrderDAO dao = new OrderDAO(this);
+//
+//            SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
+//            String userId = sharedPreferences.getString("IDPref", null);
+//            OrderDTO dto = new OrderDTO(new Date(), userId);
+//            long orderId = dao.create(dto);
+//            if (orderId < 0) {
+//                Toast.makeText(this, "Failed to create order!", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            boolean success = dao.addOrderDetail(orderId, list);
+//            if (success) {
+//                CartDAO cartDAO = new CartDAO(this);
+//                cartDAO.clearCart();
+//
+//                Intent intent = new Intent(this, MainActivity.class);
+//                startActivity(intent);
+//                finish();
+//            } else {
+//                Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
