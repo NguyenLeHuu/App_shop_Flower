@@ -11,6 +11,7 @@ import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.model.User;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Map;
 
@@ -152,6 +153,10 @@ public interface ApiService {
     Call<ResponseModel> updateUser(@Body User user);
 
     //payment paypal
-    @POST("pay")
-    Call<ResponseModel> checkout(@Body String userID, Gson data);
+//    @POST("pay/")
+//    Call<ResponseModel> checkout(@Body String userID, JsonObject data);
+
+    @POST("pay/")
+    Call<ResponseModel> checkout(@Body Map<String, Object> requestBody);
+
 }

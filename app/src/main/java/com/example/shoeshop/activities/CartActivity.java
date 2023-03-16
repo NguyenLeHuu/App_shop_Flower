@@ -2,6 +2,8 @@ package com.example.shoeshop.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +14,14 @@ import com.example.shoeshop.R;
 import com.example.shoeshop.adapters.CartAdapter;
 import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.service.ApiService;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Callback;
 import retrofit2.Call;
@@ -24,7 +30,7 @@ import retrofit2.Response;
 public class CartActivity extends AppCompatActivity {
 
     private ListView listCartView;
-
+    JsonObject data = new JsonObject();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,21 +55,22 @@ public class CartActivity extends AppCompatActivity {
         ApiService.apiService.listProductsInCart(8,1,20).enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                Log.e("Hello",response.body().toString());
+                Log.e("Hello",response.body().getData().toString());
                 switch (response.code()){
                     case 400:
                         Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
                         break;
                     case 200:
                         Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
-                        String respone = response.body().toString();
-                        JsonObject obj_respone = JsonParser.parseString(respone).getAsJsonObject();
-                        JsonArray products = obj_respone.get("data").getAsJsonArray();
-                        JsonObject data = new JsonObject();
+                        Object data_res_model = response.body().getData();
+                        Gson gson = new Gson();
+                        String dataString = gson.toJson(data_res_model);
+                        JsonArray products = JsonParser.parseString(dataString).getAsJsonArray();
+
                         data.add("products",products);
                         data.addProperty("phone","0354187011");
                         data.addProperty("description","mua hàng giá rẻ");
-                        Log.e("send_data", data.toString());
+                        Log.e("data", data.toString());
                         break;
                 }
 
@@ -81,29 +88,41 @@ public class CartActivity extends AppCompatActivity {
     public void clickToCheckout(View view) {
         try {
 
-//            ApiService.apiService.checkout("8",).enqueue(new Callback<ResponseModel>() {
-//                @Override
-//                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-//                    Log.e("Hello",response.body().toString());
-//                    switch (response.code()){
-//                        case 400:
-//                            Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
-//                            break;
-//                        case 200:
-//                            Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
-//                            break;
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ResponseModel> call, Throwable t) {
-//                    Log.e("Failure","Failure");
-//                }
-//            });
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("userId", "8");
+            requestBody.put("data", data);
+
+            ApiService.apiService.checkout(requestBody).enqueue(new Callback<ResponseModel>() {
+                @Override
+                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                    switch (response.code()){
+                        case 400:
+                            Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                            break;
+                        case 200:
+                            Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+                            String approvalUrl = response.body().getMessage();
+                            if (approvalUrl != null) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(approvalUrl));
+                                startActivity(intent);
+                            }
+                            break;
+                        default:
+                            Toast.makeText(CartActivity.this,"Failed api checkout",Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseModel> call, Throwable t) {
+                    Log.e("Failure","Failure");
+                }
+            });
 
         } catch (Exception e) {
-            Log.e("CHECKOUT","fail_checkout");
+            Log.e("CHECKOUT",e.toString());
         }
     }
 
