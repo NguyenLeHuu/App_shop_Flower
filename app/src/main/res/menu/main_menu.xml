@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menuMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="Shop location"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menuCart"
         android:title="Your Cart"
         android:icon="@drawable/shopping_cart"

@@ -1,5 +1,7 @@
 package com.example.shoeshop.service;
 
+import android.util.Log;
+
 import com.example.shoeshop.model.Account;
 import com.example.shoeshop.model.Category;
 import com.example.shoeshop.model.Flower;
@@ -14,7 +16,10 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
+import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -40,6 +45,8 @@ public interface ApiService {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);
+
+
 
     // Cart
     @GET("cart/")
