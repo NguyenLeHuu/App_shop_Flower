@@ -35,6 +35,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+
+    OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build();
 
     Gson gson = new GsonBuilder()
 
@@ -43,6 +48,7 @@ public interface ApiService {
     ApiService apiService = new Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/api/")
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
             .build()
             .create(ApiService.class);
 

@@ -42,6 +42,7 @@ public class CartActivity extends AppCompatActivity {
 
     private ListView listCartView;
     JsonObject data = new JsonObject();
+    JsonArray products;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +76,15 @@ public class CartActivity extends AppCompatActivity {
                         Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
                         break;
                     case 200:
-                        Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
                         Object data_res_model = response.body().getData();
                         Gson gson = new Gson();
                         String dataString = gson.toJson(data_res_model);
-                        JsonArray products = JsonParser.parseString(dataString).getAsJsonArray();
+                        products = JsonParser.parseString(dataString).getAsJsonArray();
+                        if(!products.isEmpty()){
+                            Toast.makeText(CartActivity.this,"You have some product in cart",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(CartActivity.this,"Nothing in cart",Toast.LENGTH_SHORT).show();
+                        }
 
                         data.add("products",products);
                         data.addProperty("phone","0354187011");
@@ -111,40 +116,46 @@ public class CartActivity extends AppCompatActivity {
 
     public void clickToCheckout(View view) {
         try {
-            SharedPreferencesManager spm = new SharedPreferencesManager(CartActivity.this);
-            User user = spm.getUser(CartActivity.this);
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("userId", user.getId());
-            requestBody.put("data", data);
+            if(!products.isEmpty()){
+                SharedPreferencesManager spm = new SharedPreferencesManager(CartActivity.this);
+                User user = spm.getUser(CartActivity.this);
+                Map<String, Object> requestBody = new HashMap<>();
+                requestBody.put("userId", user.getId());
+                requestBody.put("data", data);
 
-            ApiService.apiService.checkout(requestBody).enqueue(new Callback<ResponseModel>() {
-                @Override
-                public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
-                    switch (response.code()){
-                        case 400:
-                            Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
-                            break;
-                        case 200:
-                            Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
-                            String approvalUrl = response.body().getMessage();
-                            if (approvalUrl != null) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(approvalUrl));
-                                startActivity(intent);
-                            }
-                            break;
-                        default:
-                            Toast.makeText(CartActivity.this,"Failed api checkout",Toast.LENGTH_SHORT).show();
-                            break;
+                ApiService.apiService.checkout(requestBody).enqueue(new Callback<ResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+                        switch (response.code()){
+                            case 400:
+                                Toast.makeText(CartActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                                break;
+                            case 200:
+                                Toast.makeText(CartActivity.this,"Successful",Toast.LENGTH_SHORT).show();
+                                String approvalUrl = response.body().getMessage();
+                                if (approvalUrl != null) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(approvalUrl));
+                                    startActivity(intent);
+                                }
+                                break;
+                            default:
+                                Toast.makeText(CartActivity.this,"Failed api checkout",Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+
                     }
 
-                }
+                    @Override
+                    public void onFailure(Call<ResponseModel> call, Throwable t) {
+                        Log.e("Failure","Failure");
+                    }
+                });
+            }else{
+                Toast.makeText(CartActivity.this,"Nothing in cart",Toast.LENGTH_SHORT).show();
 
-                @Override
-                public void onFailure(Call<ResponseModel> call, Throwable t) {
-                    Log.e("Failure","Failure");
-                }
-            });
+            }
+
 
         } catch (Exception e) {
             Log.e("CHECKOUT",e.toString());

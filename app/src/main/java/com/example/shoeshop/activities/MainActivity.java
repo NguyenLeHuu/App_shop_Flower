@@ -1,9 +1,7 @@
 package com.example.shoeshop.activities;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.shoeshop.MapsActivity;
 import com.example.shoeshop.R;
 import com.example.shoeshop.adapters.ShoeAdapter;
-import com.example.shoeshop.constants.Constants;
 import com.example.shoeshop.model.Flower;
 import com.example.shoeshop.model.ResponseModel;
 import com.example.shoeshop.model.ShoesDTO;
@@ -25,7 +21,6 @@ import com.example.shoeshop.service.ApiService;
 import com.example.shoeshop.service.SharedPreferencesManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuHistory:
                 intent = new Intent(this, OrderHistoryActivity.class);
                 startActivity(intent);
+                break;
             case R.id.menuMap:
                 intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);

@@ -36,14 +36,16 @@ public class OrderHistoryActivity extends AppCompatActivity {
             SharedPreferencesManager spm = new SharedPreferencesManager(OrderHistoryActivity.this);
             int userId = spm.getUser(OrderHistoryActivity.this).getId();
 
-            ApiService.apiService.listInvoice(1, 10, userId).enqueue(new Callback<ResponseModel>() {
+            ApiService.apiService.listInvoice(1, 100, userId).enqueue(new Callback<ResponseModel>() {
                 @Override
                 public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                     Log.e("Get History",response.toString());
                     ResponseModel responseModel = response.body();
                     ArrayList<Invoice> invoices = Invoice.convertObjectToList(responseModel.getData());
 
-                    adapter.setOrderDTOArrayList(Invoice.convertInvoiceToOrderDTO(invoices));
+//                    adapter.setOrderDTOArrayList(Invoice.convertInvoiceToOrderDTO(invoices));
+                    adapter.setOrderDTOArrayList(invoices);
+                    listOrderHistoryView.setAdapter(adapter);
                 }
 
                 @Override
