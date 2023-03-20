@@ -1,85 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/pink"
+tools:context=".activities.SignupActivity">
+
+
+<TextView
+    android:id="@+id/textTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="@color/white"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:text="3H Shop"
+    android:textSize="50dp"
+    android:layout_marginTop="0dp"
+
+    android:layout_centerHorizontal="true"
+    />
+
+<TextView
+    android:id="@+id/textDescriptLogin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@+id/textTitle"
+    android:textSize="16dp"
+    android:textStyle="bold"
+    android:text=""
+    />
+
+
+<EditText
+    android:id="@+id/edtUsername"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activities.SignupActivity"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:hint="Username"
+    android:textColorHint="@color/white"
+    android:textColor="@color/white"
+    android:textSize="20dp"
+    android:layout_below="@+id/textDescriptLogin"
+    android:ems="10"
+    android:layout_margin="10dp"
+    android:padding="20dp"
+    android:inputType="text"
+    android:drawableLeft="@drawable/ic_baseline_person_24"
+    android:drawablePadding="5dp"
+    />
+
+<EditText
+    android:id="@+id/edtPassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/edtUsername"
+    android:textColorHint="@color/white"
+    android:textColor="@color/white"
+    android:hint="Password"
+    android:textSize="20dp"
+    android:ems="10"
+    android:layout_margin="10dp"
+    android:padding="20dp"
+    android:inputType="textPassword"
+    android:drawableLeft="@drawable/ic_baseline_password_24"
+    android:drawablePadding="5dp"
+    />
+
+<EditText
+    android:id="@+id/edtConfirmPassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/edtPassword"
+    android:textColorHint="@color/white"
+    android:textColor="@color/white"
+    android:hint="Confirm Password"
+    android:textSize="20dp"
+    android:ems="10"
+    android:layout_margin="10dp"
+    android:padding="20dp"
+    android:inputType="textPassword"
+    android:drawableLeft="@drawable/ic_baseline_password_24"
+    android:drawablePadding="5dp"
+    />
+
+<EditText
+    android:id="@+id/edtEmail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/edtConfirmPassword"
+    android:textColorHint="@color/white"
+    android:textColor="@color/white"
+    android:hint="Email"
+    android:textSize="20dp"
+    android:ems="10"
+    android:layout_margin="10dp"
+    android:padding="20dp"
+    android:inputType="text"
+    android:drawableLeft="@drawable/ic_baseline_email_24"
+    android:drawablePadding="5dp"
+    />
+
+<Button
+    android:id="@+id/signupbtn"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/edtEmail"
+    android:layout_margin="10dp"
+    android:padding="10dp"
+    android:textSize="20dp"
+    android:backgroundTint="@color/red"
+    android:text="Sign up"
+    android:onClick="clickToSignup"
+    />
+
+<LinearLayout
+    android:id="@+id/lltmp1"
+    android:layout_above= "@id/textForgotPassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginBottom="10dp"
+    >
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/textVDont"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textStyle="bold"
         android:gravity="center"
-        android:textSize="20dp"
-        android:text="SIGN UP"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Username"/>
-
-    <EditText
-        android:id="@+id/edtUsername"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Your username"
-        android:minHeight="48dp" />
+        android:text="Already have account? "
+        />
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/textLogin"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"/>
-
-    <EditText
-        android:id="@+id/edtPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Your Password"
-        android:inputType="textPassword"
-        android:minHeight="48dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm Password"/>
-
-    <EditText
-        android:id="@+id/edtConfirmPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Retype Password"
-        android:inputType="textPassword"
-        android:minHeight="48dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"/>
-
-    <EditText
-        android:id="@+id/edtEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Your Email"
-        android:minHeight="48dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="185dp"
-            android:layout_height="wrap_content"
-            android:onClick="clickToSignup"
-            android:text="Signup" />
-
-        <Button
-            android:layout_width="186dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#2F7DF4"
-            android:onClick="clickToSwitchToLogin"
-            android:text="Switch To Login" />
-    </LinearLayout>
+        android:textColor="@color/purple_700"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="Login now"
+        android:onClick="clickToSwitchToLogin"
+        />
 
 </LinearLayout>
+
+
+
+<TextView
+    android:id="@+id/textForgotPassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/white"
+    android:textSize="15dp"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:text="Forgot Password?"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="50dp"
+    />
+
+
+
+
+</RelativeLayout>

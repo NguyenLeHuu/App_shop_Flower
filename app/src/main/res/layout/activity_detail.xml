@@ -34,7 +34,7 @@
                 android:layout_marginBottom="40dp"
                 android:text="Name"
                 android:textAlignment="center"
-                android:textColor="#0B9502"
+                android:textColor="@color/darkpink"
                 android:textSize="30dp"
                 android:textStyle="bold" />
 
