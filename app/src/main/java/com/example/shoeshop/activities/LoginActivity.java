@@ -49,7 +49,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("Hello",response.toString());
                 switch (response.code()){
                     case 400:
-                        Toast.makeText(LoginActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,"Login Failed",Toast.LENGTH_SHORT).show();
+                         spm.saveAccessToken("");
                         break;
                     case 200:
                         Toast.makeText(LoginActivity.this,"Successful",Toast.LENGTH_SHORT).show();
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                     } else {
-                        Toast.makeText(LoginActivity.this,"Failed",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,"Get Token Failed",Toast.LENGTH_SHORT).show();
                     }
                 }
 
